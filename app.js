@@ -1,3 +1,4 @@
+var http = require('http');
 var GCM = require('node-gcm-ccs');
 var gcm = GCM('562766010128', 'AIzaSyBUEVVKBM3L93C92QMKDY7lfEEzNYTQuas');
  
@@ -16,3 +17,7 @@ gcm.send('e3zFrvuRPeo:APA91bHHmsZXAjvsXD-fvnEnjh-fKqLAWStbHf3GXmIKIESKDmBQ_Hcm4W
 		console.log('failed to send message');
 	}
 })
+
+var server = http.createServer(app)
+server.listen(process.env.PORT || 5000)
+console.log("http server listening on %d", port)
