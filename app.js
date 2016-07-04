@@ -9,7 +9,7 @@ gcm.on('receipt', function(messageId, from, category, data) {
 	console.log('received receipt', arguments);
 });
  
-gcm.send('', { message: 'hello world' }, { delivery_receipt_requested: true }, function(err, messageId, to) {
+gcm.send('e3zFrvuRPeo:APA91bHHmsZXAjvsXD-fvnEnjh-fKqLAWStbHf3GXmIKIESKDmBQ_Hcm4WTteHtyQNVuRHyaBkaeAhiSvbRG-RrEoPW49Yd_2-Cmdli-qMcHI5Pg5vCqkIkbSvUc3ruN1uGTZU8U_B9P', { message: 'hello world' }, { delivery_receipt_requested: true }, function(err, messageId, to) {
 	if (!err) {
 		console.log('sent message to', to, 'with message_id =', messageId);
 	} else {
