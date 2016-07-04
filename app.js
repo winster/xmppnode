@@ -22,4 +22,4 @@ gcm.send('e3zFrvuRPeo:APA91bHHmsZXAjvsXD-fvnEnjh-fKqLAWStbHf3GXmIKIESKDmBQ_Hcm4W
 
 var server = http.createServer(app)
 server.listen(process.env.PORT || 5000)
-console.log("http server listening on %d", port)
+console.log("http server listening on %d", process.env.PORT || 5000)
