@@ -4,7 +4,8 @@
   "description": "xmpp server",
   "main": "app.js",
   "dependencies": {
-    "node-gcm-ccs": "https://github.com/jacobp100/node-gcm-ccs.git"
+    "node-gcm-ccs": "https://github.com/jacobp100/node-gcm-ccs.git",
+    "express": "*"
   },
   "devDependencies": {},
   "scripts": {

@@ -1,4 +1,6 @@
+var express = require('express');
 var http = require('http');
+var app = express();
 var GCM = require('node-gcm-ccs');
 var gcm = GCM('562766010128', 'AIzaSyBUEVVKBM3L93C92QMKDY7lfEEzNYTQuas');
  
