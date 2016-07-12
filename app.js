@@ -32,7 +32,7 @@ gcm.on('message', function(messageId, from, category, data) {
             json+=chunk
         });
         res.on('end', () => {
-            console.log('Response: ' + json);
+            //console.log('Response: ' + json);
             json=JSON.parse(json)
             var payload = {'user':json.user, 'message': json.message, 'id':messageId, 'time': data['time']}
             gcm.send(json.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
