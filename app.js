@@ -4,9 +4,10 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
 var GCM = require('node-gcm-ccs');
-var gcm = GCM('562766010128', 'AIzaSyBUEVVKBM3L93C92QMKDY7lfEEzNYTQuas');
+var gcm = GCM('415730801579', 'AIzaSyCt-ul4GBpRr2-F0tnp4HwYAWGTO8pimLo');
  
 gcm.on('message', function(messageId, from, category, data) {
+    console.log('message received::'+data)
     data.from = from
     var post_data = JSON.stringify(data)
     var post_options = {
