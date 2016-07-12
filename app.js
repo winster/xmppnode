@@ -13,7 +13,7 @@ gcm.on('message', function(messageId, from, category, data) {
     console.log('message received::'+JSON.stringify(data))
     data.messageId = messageId
     var post_data = JSON.stringify(data)
-    var auth = "Basic " + new Buffer(data.from + ":" + from).toString("base64");
+    var auth = "Basic " + new Buffer(data.user + ":" + from).toString("base64");
     var post_options = {
         host: 'surcle.herokuapp.com',
         port: '443',
