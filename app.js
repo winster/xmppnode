@@ -1,5 +1,5 @@
 var express = require('express');
-var http = require('http');
+var https = require('https');
 var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
@@ -20,7 +20,7 @@ gcm.on('message', function(messageId, from, category, data) {
             'Content-Length': Buffer.byteLength(post_data)
         }
     };
-    var post_req = http.request(post_options, (res) => {
+    var post_req = https.request(post_options, (res) => {
         console.log('inside response', res);
         var json = '';
         res.setEncoding('utf8');
@@ -47,6 +47,7 @@ gcm.on('receipt', function(messageId, from, category, data) {
     console.log('received receipt', arguments);
 });
 
-var server = http.createServer(app)
-server.listen(process.env.PORT || 5000)
-console.log("http server listening on %d", process.env.PORT || 5000)
+app.listen(process.env.PORT || 5000, function() {
+  console.log('GCM XMPP app is running on port', process.env.PORT || 5000);
+});
+exports = module.exports = app;
