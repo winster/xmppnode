@@ -34,7 +34,8 @@ gcm.on('message', function(messageId, from, category, data) {
         res.on('end', () => {
             console.log('Response: ' + json);
             json=JSON.parse(json)
-            gcm.send(json.token, { message: json.message }, { delivery_receipt_requested: true }, (err, messageId, to) => {
+            var payload = {'user':json.user, 'message': json.message, 'id':messageId, 'time': data['time']}
+            gcm.send(json.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
                 if (!err) {
                     console.log('sent message to', to, 'with message_id =', messageId);
                 } else {
