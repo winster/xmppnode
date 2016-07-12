@@ -1,5 +1,5 @@
 var express = require('express');
-var https = require('http');
+var https = require('https');
 var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
@@ -15,8 +15,8 @@ gcm.on('message', function(messageId, from, category, data) {
     var post_data = JSON.stringify(data)
     var auth = "Basic " + new Buffer(data.from + ":" + from).toString("base64");
     var post_options = {
-        host: 'localhost',
-        port: '8080',
+        host: 'surcle.herokuapp.com',
+        port: '443',
         path: '/v1.0/message',
         method: 'POST',
         headers: {
