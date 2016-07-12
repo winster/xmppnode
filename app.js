@@ -7,7 +7,7 @@ var GCM = require('node-gcm-ccs');
 var gcm = GCM('415730801579', 'AIzaSyCt-ul4GBpRr2-F0tnp4HwYAWGTO8pimLo');
  
 gcm.on('message', function(messageId, from, category, data) {
-    console.log('message received::'+data)
+    console.log('message received::'+JSON.stringify(data))
     data.messageId = messageId
     var post_data = JSON.stringify(data)
     var post_options = {
@@ -21,7 +21,8 @@ gcm.on('message', function(messageId, from, category, data) {
         }
     };
     var post_req = http.request(post_options, (res) => {
-    	var json = '';
+        console.log('inside response', res);
+        var json = '';
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             json+=chunk
@@ -40,7 +41,6 @@ gcm.on('message', function(messageId, from, category, data) {
     });
     post_req.write(post_data);
     post_req.end();
-    console.log('received message', arguments);
 });
  
 gcm.on('receipt', function(messageId, from, category, data) {
