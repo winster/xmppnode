@@ -7,12 +7,12 @@ var GCM = require('node-gcm-ccs');
 var gcm = GCM('562766010128', 'AIzaSyBUEVVKBM3L93C92QMKDY7lfEEzNYTQuas');
  
 gcm.on('message', function(messageId, from, category, data) {
-    data.from = from
+    data.messageId = messageId
     var post_data = JSON.stringify(data)
     var post_options = {
-        host: 'surcle.herokuapp.com/v1.0',
+        host: 'surcle.herokuapp.com',
         port: '443',
-        path: '/message',
+        path: '/v1.0/message',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -23,12 +23,12 @@ gcm.on('message', function(messageId, from, category, data) {
     	var json = '';
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
-            console.log('Response: ' + chunk);
             json+=chunk
         });
         res.on('end', () => {
+            console.log('Response: ' + json);
             json=JSON.parse(json)
-            gcm.send(json.to, { message: json.message }, { delivery_receipt_requested: true }, (err, messageId, to) => {
+            gcm.send(json.token, { message: json.message }, { delivery_receipt_requested: true }, (err, messageId, to) => {
                 if (!err) {
                     console.log('sent message to', to, 'with message_id =', messageId);
                 } else {
