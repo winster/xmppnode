@@ -1,5 +1,5 @@
 var express = require('express'),
-    https = require('http'),
+    https = require('https'),
     bodyParser = require('body-parser'),
     GCM = require('node-gcm-ccs'),
     WebSocketServer = require("ws").Server;
@@ -20,8 +20,8 @@ gcm.on('receipt', function(messageId, from, category, data) {
 });
 
 var post_options = {
-    host: 'localhost',
-    port: '8080',
+    host: 'surcle.herokuapp.com',
+    port: '443',
     path: '/v1.0/message',
     method: 'POST',
     headers: {
