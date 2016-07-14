@@ -77,3 +77,4 @@ wss.on("connection", function(ws) {
 });
 
 exports = module.exports = app;
+console.log('websocket server started');
