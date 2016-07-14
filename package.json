@@ -6,7 +6,8 @@
   "dependencies": {
     "node-gcm-ccs": "https://github.com/jacobp100/node-gcm-ccs.git",
     "express": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "ws": "*"
   },
   "devDependencies": {},
   "scripts": {
