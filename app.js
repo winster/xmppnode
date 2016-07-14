@@ -1,5 +1,6 @@
 var express = require('express'),
     https = require('https'),
+    http = require('http'),    
     bodyParser = require('body-parser'),
     GCM = require('node-gcm-ccs'),
     WebSocketServer = require("ws").Server;
@@ -29,10 +30,12 @@ var post_options = {
     }
 };
     
-var server = https.createServer();
+var server = http.createServer();
 var wss = new WebSocketServer({server: server})
 server.on('request', app);
-server.listen(process.env.PORT || 5000);
+server.listen(process.env.PORT || 5000, function () { 
+    console.log('Listening on ' + server.address().port) 
+});
 
 wss.on("connection", function(ws) {
     var result = {'status':'connected'}
@@ -77,4 +80,3 @@ wss.on("connection", function(ws) {
 });
 
 exports = module.exports = app;
-console.log('websocket server started');
