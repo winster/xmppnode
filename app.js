@@ -47,7 +47,8 @@ wss.on("connection", function(ws) {
     ws.send(JSON.stringify(result), function() {  })
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
-        post_data = message;
+        ws.send(message, function() {console.log('echo sent')  });
+        /*post_data = message;
         message = JSON.parse(message);
         var auth = "Basic " + new Buffer(message.user + ":" + message.token).toString("base64");
         post_options.headers['Authorization'] = auth;
@@ -82,7 +83,7 @@ wss.on("connection", function(ws) {
                         }
                     })
                 }
-            });
+            });*/
         });
         post_req.write(post_data);
         post_req.end();
