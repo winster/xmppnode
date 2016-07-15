@@ -74,9 +74,9 @@ wss.on("connection", function(ws) {
                         console.error('connection_id missing for user: %s not sending any message', message.to);
                     }
                 } else {
-                    gcm.send(user.token, payload, { delivery_receipt_requested: true }, (err, message.id, to) => {
+                    gcm.send(user.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
                         if (!err) {
-                            console.log('sent message to', to, 'with message_id =', message.id);
+                            console.log('sent message to', to, 'with message_id =', messageId);
                         } else {
                             console.log('failed to send message');
                         }
