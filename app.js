@@ -43,12 +43,11 @@ wss.on("connection", function(ws) {
     clients[connection_id] = ws;
     ws.connection_id = connection_id;
     console.log("websocket connection open");
-    var result = {'connection_id': connection_id}
+    var result = {'status':'connected','connection_id': connection_id}
     ws.send(JSON.stringify(result), function() {  })
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
-        ws.send(message, function() {console.log('echo sent')  });
-        /*post_data = message;
+        post_data = message;
         message = JSON.parse(message);
         var auth = "Basic " + new Buffer(message.user + ":" + message.token).toString("base64");
         post_options.headers['Authorization'] = auth;
@@ -86,7 +85,7 @@ wss.on("connection", function(ws) {
             });
         });
         post_req.write(post_data);
-        post_req.end();*/
+        post_req.end();
     });
     ws.on("close", function() {
         delete clients[ws.connection_id];
