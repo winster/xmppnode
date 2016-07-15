@@ -83,10 +83,10 @@ wss.on("connection", function(ws) {
                         }
                     })
                 }
-            });*/
+            });
         });
         post_req.write(post_data);
-        post_req.end();
+        post_req.end();*/
     });
     ws.on("close", function() {
         delete clients[ws.connection_id];
