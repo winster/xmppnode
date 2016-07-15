@@ -43,7 +43,7 @@ wss.on("connection", function(ws) {
     clients[connection_id] = ws;
     ws.connection_id = connection_id;
     console.log("websocket connection open");
-    var result = {'status':'connected','connection_id': connection_id}
+    var result = {'status':'connected testnig testing testing testing testing testing','connection_id': connection_id}
     ws.send(JSON.stringify(result), function() {  })
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
