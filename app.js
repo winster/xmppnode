@@ -32,7 +32,7 @@ var post_options = {
 var server = http.createServer();
 var wss = new WebSocketServer({server: server})
 server.on('request', app);
-server.listen(process.env.PORT || 5000, function () { 
+server.listen(process.env.PORT || 8080, function () { 
     console.log('Listening on ' + server.address().port) 
 });
 
@@ -52,7 +52,7 @@ wss.on("connection", function(ws) {
         var auth = "Basic " + new Buffer(message.user + ":" + message.token).toString("base64");
         post_options.headers['Authorization'] = auth;
         post_options.headers['Content-Length'] = Buffer.byteLength(post_data);
-        var post_req = http.request(post_options, (res) => {
+        var post_req = https.request(post_options, (res) => {
             var json = '';
             res.setEncoding('utf8');
             res.on('data', (chunk) => {
