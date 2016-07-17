@@ -65,7 +65,8 @@ wss.on("connection", function(ws) {
                     ws.send(json, function() {  });
                     return;
                 }
-                var payload = {'user':message.user, 'data': message.data, 'id':message.id, 'time': new Date().getTime()}
+                var payload = {'product_id':message.product_id, 'user':message.user, 'data': message.data, 
+                    'type':message.type, 'id':message.id, 'time': new Date().getTime()}
                 if(user.online) {
                     if(user.connection_id) {
                         to_ws = clients[user.connection_id]
