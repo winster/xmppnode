@@ -69,13 +69,8 @@ wss.on("connection", function(ws) {
                 }
                 var payload = {'product_id':message.product_id, 'user':message.user, 'data': message.data, 
                     'type':message.type, 'id':message.id, 'time': new Date().getTime()}
-                if(user.online) {
-                    if(user.connection_id) {
-                        to_ws = clients[user.connection_id]
+                if(user.online && user.connection_id && to_ws = clients[user.connection_id]) {
                         to_ws.send(JSON.stringify(payload), function() {  })
-                    } else {
-                        console.error('connection_id missing for user: %s not sending any message', message.to);
-                    }
                 } else {
                     gcm.send(user.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
                         if (!err) {
