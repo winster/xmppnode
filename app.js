@@ -69,9 +69,14 @@ wss.on("connection", function(ws) {
                 }
                 var payload = {'product_id':message.product_id, 'user':message.user, 'data': message.data, 
                     'type':message.type, 'id':message.id, 'time': new Date().getTime()}
-                if(user.online && user.connection_id && to_ws = clients[user.connection_id]) {
+                var useGCM = true;
+                if(user.online && user.connection_id) {
+                    if(to_ws = clients[user.connection_id]) {
                         to_ws.send(JSON.stringify(payload), function() {  })
-                } else {
+                        useGCM = false;
+                    }
+                }
+                if(useGCM) {
                     gcm.send(user.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
                         if (!err) {
                             console.log('sent message to', to, 'with message_id =', messageId);
