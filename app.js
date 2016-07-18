@@ -32,7 +32,7 @@ var post_options = {
 var server = http.createServer();
 var wss = new WebSocketServer({server: server})
 server.on('request', app);
-server.listen(process.env.PORT || 8080, function () { 
+server.listen(process.env.PORT || 5000, function () { 
     console.log('Listening on ' + server.address().port) 
 });
 
@@ -47,6 +47,8 @@ wss.on("connection", function(ws) {
     ws.send(JSON.stringify(result), function() {  })
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
+        if(message=="ping")
+            return;
         post_data = message;
         message = JSON.parse(message);
         var auth = "Basic " + new Buffer(message.user + ":" + message.token).toString("base64");
