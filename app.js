@@ -8,7 +8,7 @@ var express = require('express'),
 
 var app = express();
 app.use(bodyParser.json());
-var gcm = GCM('415730801579', 'AIzaSyCt-ul4GBpRr2-F0tnp4HwYAWGTO8pimLo');
+var gcm = GCM('640723155266', 'AIzaSyC6jFXGk50i1dEfP0GJn5exE29j6z8O4h0');
  
 gcm.on('message', function(messageId, from, category, data) {
     console.log('message received::'+JSON.stringify(data))
