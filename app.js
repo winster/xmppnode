@@ -19,6 +19,12 @@ gcm.on('receipt', function(messageId, from, category, data) {
     console.log('received receipt', arguments);
 });
 
+gcm.on('connected', function(){console.log('connected')});
+gcm.on('disconnected', function(){console.log('disconnected')});
+gcm.on('online', function(){console.log('online')});
+gcm.on('error', function(){console.log('error')});
+gcm.on('message-error', function(message){console.log('message-error::', message)});
+
 var post_options = {
     host: 'surcle.herokuapp.com',
     port: '443',
