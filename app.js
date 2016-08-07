@@ -83,13 +83,13 @@ wss.on("connection", function(ws) {
                     }
                 }
                 if(useGCM) {
-                    gcm.send(user.token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
-                        if (!err) {
-                            console.log('sent message to', to, 'with message_id =', messageId);
-                        } else {
-                            console.log('failed to send message');
-                        }
-                    })
+                    var queue = messageQueue[user.token]
+                    if(!queue) {
+                        queue = []
+                    }
+                    queue.push(payload)
+                    messageQueue[user.token] = queue
+                    sendToGCM(user.token)
                 }
             });
         });
@@ -101,5 +101,22 @@ wss.on("connection", function(ws) {
         console.log("websocket connection closed ::", Object.keys(clients));            
     });
 });
+
+var messageQueue={}
+function sendToGCM(token){
+    var len = messageQueue[token].length-1
+    var payload = messageQueue[token][len]
+    gcm.send(token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
+        if (!err) {
+            console.log('sent message to', to, 'with message_id =', messageId);
+            messageQueue[token].shift()
+        } else {
+            console.log('failed to send message');
+            setTimeout(function() {
+                sendToGCM(token)
+            }, 3000);
+        }
+    })
+}
 
 exports = module.exports = app;
