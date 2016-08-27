@@ -78,6 +78,7 @@ wss.on("connection", function(ws) {
                 var useGCM = true;
                 if(user.online && user.connection_id) {
                     if(to_ws = clients[user.connection_id]) {
+                        console.log('websocket channel active');
                         to_ws.send(JSON.stringify(payload), function() {  })
                         useGCM = false;
                     }
@@ -104,19 +105,28 @@ wss.on("connection", function(ws) {
 
 var messageQueue={}
 function sendToGCM(token){
-    var len = messageQueue[token].length-1
-    var payload = messageQueue[token][len]
-    gcm.send(token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
-        if (!err) {
-            console.log('sent message to', to, 'with message_id =', messageId);
-            messageQueue[token].shift()
+    console.log('GCM channel')
+    if(messageQueue[token]) {
+        var len = messageQueue[token].length-1
+        if(len>-1) {
+            var payload = messageQueue[token][len]
+            gcm.send(token, payload, { delivery_receipt_requested: true }, (err, messageId, to) => {
+                if (!err) {
+                    console.log('sent message to', to, 'with message_id =', messageId);
+                    messageQueue[token].shift()
+                } else {
+                    console.log('failed to send message');
+                    setTimeout(function() {
+                        sendToGCM(token)
+                    }, 3000);
+                }
+            })
         } else {
-            console.log('failed to send message');
-            setTimeout(function() {
-                sendToGCM(token)
-            }, 3000);
+            console.log('messageQueue length is 0')
         }
-    })
+    } else {
+        console.log('no message found in queue')
+    }
 }
 
 exports = module.exports = app;
