@@ -66,8 +66,9 @@ wss.on("connection", function(ws) {
             'time': new Date().getTime()
         }
         getUserAndSendMessage(message.user, message.token, post_data, payload, function(data){
-            ws.send(data, function() {  });
-            return;
+            if(data.result=='failed') {
+                ws.send(JSON.stringify(data), function() {  });
+            }
         })
     });
     ws.on("close", function() {
@@ -111,10 +112,10 @@ var getUserAndSendMessage = function(user, token, post_data, payload, callback) 
             json+=chunk
         });
         res.on('end', () => {
-            console.log(json)
+            console.log('received from python server %s',json)
             user=JSON.parse(json)
             if(user.error){
-                callback({'result':'failed','data':json});
+                callback({'result':'failed','data':user});
                 return;
             }
             var useGCM = true;
