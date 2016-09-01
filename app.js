@@ -79,7 +79,7 @@ wss.on("connection", function(ws) {
 
 app.post('/v1.0/receipt', function(req, res){
     var input = req.body;
-    console.log('receipt: %s', input)
+    console.log('receipt: %s', JSON.stringify(input))
     if(!(input.user && input.token && input.to && input.product_id && input.message_id)) {
         var msg = {error:"Input missing",errorCode:"101"};
         sendResponse(res, msg);
@@ -92,7 +92,7 @@ app.post('/v1.0/receipt', function(req, res){
         'id':input.message_id, 
         'time': new Date().getTime()
     }
-    getUserAndSendMessage(input.user, input.token, {'to':input.to}, payload, function(data){
+    getUserAndSendMessage(input.user, input.token, JSON.stringify({'to':input.to}), payload, function(data){
         sendResponse(res, error);   
     })    
 });
