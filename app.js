@@ -57,45 +57,18 @@ wss.on("connection", function(ws) {
             return;
         post_data = message;
         message = JSON.parse(message);
-        var auth = "Basic " + new Buffer(message.user + ":" + message.token).toString("base64");
-        post_options.headers['Authorization'] = auth;
-        post_options.headers['Content-Length'] = Buffer.byteLength(post_data);
-        var post_req = https.request(post_options, (res) => {
-            var json = '';
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
-                json+=chunk
-            });
-            res.on('end', () => {
-                console.log(json)
-                user=JSON.parse(json)
-                if(user.error){
-                    ws.send(json, function() {  });
-                    return;
-                }
-                var payload = {'product_id':message.product_id, 'user':message.user, 'data': message.data, 
-                    'type':message.type, 'id':message.id, 'time': new Date().getTime()}
-                var useGCM = true;
-                if(user.online && user.connection_id) {
-                    if(to_ws = clients[user.connection_id]) {
-                        console.log('websocket channel active');
-                        to_ws.send(JSON.stringify(payload), function() {  })
-                        useGCM = false;
-                    }
-                }
-                if(useGCM) {
-                    var queue = messageQueue[user.token]
-                    if(!queue) {
-                        queue = []
-                    }
-                    queue.push(payload)
-                    messageQueue[user.token] = queue
-                    sendToGCM(user.token)
-                }
-            });
-        });
-        post_req.write(post_data);
-        post_req.end();
+        var payload = {
+            'product_id':message.product_id, 
+            'user':message.user, 
+            'data': message.data, 
+            'type':message.type, 
+            'id':message.id, 
+            'time': new Date().getTime()
+        }
+        getUserAndSendMessage(message.user, message.token, post_data, payload, function(data){
+            ws.send(data, function() {  });
+            return;
+        })
     });
     ws.on("close", function() {
         delete clients[ws.connection_id];
@@ -103,8 +76,73 @@ wss.on("connection", function(ws) {
     });
 });
 
+app.post('/v1.0/receipt', function(req, res){
+    var input = req.body;
+    if(!(input.user && input.token && input.to && input.product_id && input.message_id)) {
+        var msg = {error:"Input missing",errorCode:"101"};
+        sendResponse(res, msg);
+        return;
+    }
+    var payload = {
+        'product_id':input.product_id, 
+        'user':message.user, 
+        'type':'MESSAGE_RECEIPT', 
+        'id':input.message_id, 
+        'time': new Date().getTime()
+    }
+    getUserAndSendMessage(input.user, input.token, {'to':input.to}, payload, function(data){
+        sendResponse(res, error);   
+    })    
+});
+
+var sendResponse = function(res, msg){
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(msg));
+};
+
+var getUserAndSendMessage = function(user, token, post_data, payload, callback) {
+    var auth = "Basic " + new Buffer(user + ":" + token).toString("base64");
+    post_options.headers['Authorization'] = auth;
+    post_options.headers['Content-Length'] = Buffer.byteLength(post_data);
+    var post_req = https.request(post_options, (res) => {
+        var json = '';
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+            json+=chunk
+        });
+        res.on('end', () => {
+            console.log(json)
+            user=JSON.parse(json)
+            if(user.error){
+                callback({'result':'failed','data':json});
+                return;
+            }
+            var useGCM = true;
+            if(user.online && user.connection_id) {
+                if(to_ws = clients[user.connection_id]) {
+                    console.log('websocket channel active');
+                    to_ws.send(JSON.stringify(payload), function() {  })
+                    useGCM = false;
+                }
+            }
+            if(useGCM) {
+                var queue = messageQueue[user.token]
+                if(!queue) {
+                    queue = []
+                }
+                queue.push(payload)
+                messageQueue[user.token] = queue
+                sendToGCM(user.token)
+            }
+            callback({'result':'success'})
+        });
+    });
+    post_req.write(post_data);
+    post_req.end();
+}
+
 var messageQueue={}
-function sendToGCM(token){
+var sendToGCM = function(token){
     console.log('GCM channel')
     if(messageQueue[token]) {
         var len = messageQueue[token].length-1
