@@ -77,10 +77,12 @@ wss.on("connection", function(ws) {
     });
 });
 
+/* Message delivery receipt as well as payment card acknowledgement are handled here. Could not find a proper name, hence given receipt
+*/
 app.post('/v1.0/receipt', function(req, res){
     var input = req.body;
     console.log('receipt: %s', JSON.stringify(input))
-    if(!(input.user && input.token && input.to && input.product_id && input.message_id)) {
+    if(!(input.user && input.token && input.to && input.product_id && input.message_id && input.message_type)) {
         var msg = {error:"Input missing",errorCode:"101"};
         sendResponse(res, msg);
         return;
@@ -88,7 +90,7 @@ app.post('/v1.0/receipt', function(req, res){
     var payload = {
         'product_id':input.product_id, 
         'user':input.user, 
-        'type':'MESSAGE_RECEIPT', 
+        'type':input.message_type, 
         'id':input.message_id, 
         'time': new Date().getTime()
     }
