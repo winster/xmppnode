@@ -93,7 +93,7 @@ app.post('/v1.0/receipt', function(req, res){
         'time': new Date().getTime()
     }
     getUserAndSendMessage(input.user, input.token, JSON.stringify({'to':input.to}), payload, function(data){
-        sendResponse(res, error);   
+        sendResponse(res, data);   
     })    
 });
 
